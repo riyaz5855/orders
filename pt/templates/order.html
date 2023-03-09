@@ -1,0 +1,90 @@
+{% extends 'base.html' %} {% block body %}
+
+<link rel="stylesheet" href="{{url_for('static',filename='css/order.css')}}" />
+
+<div class="row justify-content-center">
+
+  <!-- Product Image -->
+  <div class="col-md-4">
+    <div class="ecommerce-gallery" data-mdb-zoom-effect="true" data-mdb-auto-height="true">
+      <div class="row py-3 shadow-5">
+        <div class="col-12 mb-1">
+          <div class="lightbox">
+            <img id="mainImage" src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/14a.webp" alt="Gallery image 1"
+              class="ecommerce-gallery-main-img active w-100" />
+          </div>
+        </div>
+        <div class="col-3 mt-1">
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/14a.webp"
+            data-mdb-img="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/14a.webp"
+            alt="Gallery image 1" class="active w-100" />
+        </div>
+        <div class="col-3 mt-1">
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/12a.webp"
+            data-mdb-img="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/12a.webp"
+            alt="Gallery image 2" class="w-100" />
+        </div>
+        <div class="col-3 mt-1">
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/13a.webp"
+            data-mdb-img="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/13a.webp"
+            alt="Gallery image 3" class="w-100" />
+        </div>
+        <div class="col-3 mt-1">
+          <img src="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/15a.webp"
+            data-mdb-img="https://mdbcdn.b-cdn.net/img/Photos/Horizontal/E-commerce/Vertical/15a.webp"
+            alt="Gallery image 4" class="w-100" />
+        </div>
+        {% for image in product.imageAdd %}
+        <div class="col-3 mt-1">
+          <img id={{image}} src="{{ url_for('static', filename='uploads/'+image) }}"
+          alt="Gallery image 4" class="w-100 sml" />
+        </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+
+
+
+  <!-- table -->
+  <div class="col-md-7 table-container">
+    <form method="POST" action="{{ url_for('summary') }}">
+    <table class="styled-table">
+      <thead>
+        <tr>
+          <th class='h5'>Colors</th>
+          {% for item in product.sizes_prices %}
+          <th class='h5'>{{ item[0] }} - {{item[1]}}</th>
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for color in product.colors %}
+        <tr>
+          <td class='h5' style="background-color: {{color[2]}}">
+            {{ color[0] }}-{{color[1]}}
+          </td>
+          {% for size in product.sizes_prices %}
+          <td>
+            <div class="button-group">
+              <button type='button' id="decrement-{{color[1]}}-{{size[0]}}">-</button>
+              <input class="quant" type="number"
+                id="integer-field-{{color[1]}}-{{size[0]}}" style="-webkit-appearance: none; -moz-appearance: textfield"
+                value="0" name="data" />
+              <button type="button" id="increment-{{color[1]}}-{{size[0]}}">+</button>
+              <input type="hidden" value="{{color[0]}}-{{color[1]}}-{{color[2]}}-{{size[0]}}-{{size[1]}}" name="ddata" />
+            </div>
+          </td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <button id="order" type="submit" class="btn btn-primary my-3 px-5">Order</button>
+  </form>
+  </div>
+</div>
+
+<script src="{{ url_for('static', filename='js/order.js') }}"></script>
+
+{% endblock body %}

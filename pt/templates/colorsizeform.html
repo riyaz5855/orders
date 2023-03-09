@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block body %}
+    <div class="container">
+        <div class="row justify-content-center my-3">
+            <div class="btn-group col-5" role="group" aria-label="Basic example">
+                <button type="button" class="btn btn-primary" id="add-color-button">
+                    Add Color
+                </button>
+            
+                <button type="button" class="btn btn-secondary" id="add-size-button">
+                    Add Size
+                </button>
+            </div>
+        </div>
+
+        <div class="row justify-content-center py-3">
+            <!-- color -->
+            <form id="color-form" class="col-3 border p-3" method="POST" action="{{ url_for('colorsizeform') }}">
+                <div class="form-group">
+                    <label for="name">Name:</label>
+                    <input type="text" id="name" name="name" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="number">Number:</label>
+                    <input type="number" id="number" name="number" min="0" max="100" class="form-control" required />
+                </div>
+                <div class="form-group">
+                    <label for="color">Color:</label>
+                    <input type="color" id="color" name="color" class="form-control p-2"
+                        style="height: 50px; width: 100px;" required />
+                </div>
+                <div class="form-group">
+                    <button type="submit" class="btn btn-primary my-3">Submit</button>
+                </div>
+            </form>
+
+            <!-- size -->
+            <form id="size-form" class="col-3 border py-3" style="display: none;" method="POST" action="{{ url_for('colorsizeform') }}">
+                <div class="form-group my-3">
+                    <label for="size">Size:</label>
+                    <input type="text" class="form-control" id="size" name="size" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+        </div>
+    </div>
+
+
+<script src="{{ url_for('static', filename='js/colorsizeform.js') }}"></script>
+
+{% endblock body %}

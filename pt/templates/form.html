@@ -1,0 +1,92 @@
+{% extends 'base.html' %} {% block body %}
+
+<link rel="stylesheet" href="{{url_for('static',filename='css/form.css')}}" />
+
+<!-- form -->
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <h1 class="mt-2">Product Form</h1>
+
+      <form enctype="multipart/form-data" method="POST" action="{{ url_for('form') }}">
+        <!-- name -->
+        <div class="form-group mt-2">
+          <label for="name">Name</label>
+          <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" />
+        </div>
+
+
+        <div class="row justify-content-between">
+          <div class="col-md-5">
+
+            <!-- size and price -->
+
+            <!-- Custom CSS -->
+
+            <label class="mt-3" for="color">sizes / prices</label><br />
+
+            <div class="form-group mt-2">
+              {% for size in size_data %}
+              <div class="form-check">
+                <input class="form-check-input" value="{{size.name}}" type="checkbox" name="size"
+                  id="checkbox-{{size.name}}">
+                <label class="form-check-label" for="checkbox-{{size.name}}">{{size.name}}</label>
+                <input class="form-control hidden-input" type="number" class="price" id="input-{{size.name}}"
+                  name="price" placeholder="Price">
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+
+          <!-- colors -->
+
+          <div class="col-md-7">
+            <label class="mt-3" for="color">Colors</label>
+            <div class="form-group mt-2">
+              {% for color in form_data %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" value="{{color.name}}-{{color.number}}-{{color.color}}" type="checkbox"
+                  name="color" id="color-{{color.name}}" />
+                <label class="form-check-label" for="color-{{color.name}}"><span class="color-swatch rounded"
+                    style="background-color: {{color.color}}; width:15rem; height:2rem"></span>
+                  {{color.name}}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- description -->
+        <div class="form-group mt-3">
+          <label for="description">Description</label>
+          <textarea class="form-control mt-2" id="description" name="description" rows="3"></textarea>
+        </div>
+
+
+        <div>
+          <div class="form-group">
+            <label for="photo" class="col-sm-2 control-label mt-3">Upload</label>
+            <div>
+              <input type="file" class="form-control mt-2" name="photo" id="photo" accept=".png, .jpg, .jpeg"
+                onchange="readFile(this);" multiple>
+            </div>
+          </div>
+          <div id="status"></div>
+          <div id="photos" class="row py-3"></div>
+        </div>
+
+        <!-- submit -->
+        <button type="submit" class="btn btn-primary my-3 px-5">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='js/form.js') }}"></script>
+
+{% endblock body %}

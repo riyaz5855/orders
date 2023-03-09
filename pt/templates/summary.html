@@ -1,0 +1,29 @@
+{% extends 'base.html' %} {% block body %}
+
+<link rel="stylesheet" href="{{url_for('static',filename='css/order.css')}}" />
+
+<div class="row justify-content-center">
+<div class="col-md-7">
+<table class="styled-table">
+    <thead>
+      <tr>
+        <th  class='h5'>color - price</th>
+        {% for size, price in s %}
+          <th  class='h5'>{{ size }} - {{ price }}</th>
+        {% endfor %}
+      </tr>
+    </thead>
+    <tbody>
+      {% for color, quantity in cq %}
+        <tr>
+          <td class='h5' style="background-color: {{color[2]}}">{{color[0]}} - {{color[1]}}</td>
+          {% for q in quantity %}
+            <td class='h4'>{{q}}</td>
+          {% endfor %}
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+</div>
+  {% endblock body %}
