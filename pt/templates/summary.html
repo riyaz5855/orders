@@ -2,28 +2,109 @@
 
 <link rel="stylesheet" href="{{url_for('static',filename='css/order.css')}}" />
 
-<div class="row justify-content-center">
-<div class="col-md-7">
-<table class="styled-table">
-    <thead>
-      <tr>
-        <th  class='h5'>color - price</th>
-        {% for size, price in s %}
-          <th  class='h5'>{{ size }} - {{ price }}</th>
-        {% endfor %}
-      </tr>
-    </thead>
-    <tbody>
-      {% for color, quantity in cq %}
+<div id="rrr" class="row justify-content-center">
+  <div class="col-md-7">
+    <h2>{{name}}</h2>
+    <table class="styled-table">
+      <thead>
         <tr>
-          <td class='h5' style="background-color: {{color[2]}}">{{color[0]}} - {{color[1]}}</td>
-          {% for q in quantity %}
-            <td class='h4'>{{q}}</td>
+          <th class="h5">color - price</th>
+          {% for size, price in s %}
+          <th class="h5">{{ size }} - {{ price }}</th>
           {% endfor %}
         </tr>
-      {% endfor %}
-    </tbody>
-  </table>
+      </thead>
+      <tbody>
+        {% for color, quantity in cq %}
+        <tr>
+          <td class="h5" style="background-color: {{color[2]}}">
+            {{color[0]}} - {{color[1]}}
+          </td>
+          {% for q in quantity %}
+          <td class="h4">{{q}}</td>
+          {% endfor %}
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+
+    <div class="mt-5 table-responsive alert alert-primary">
+      <table class="table">
+        <tr>
+          <th>Size</th>
+          <th>Quantity</th>
+          <th>Price</th>
+          <th>Total Price</th>
+        </tr>
+        <tr style="
+            font-size: 20px;
+            font-weight: bold;
+            border-top: 2px solid black;
+          "></tr>
+        {% for size, info in size_dict.items() %}
+        <tr>
+          <td>{{ size }}</td>
+          <td>{{ info["quantity"] }}</td>
+          <td>{{ info["price"] }}</td>
+          <td>{{ info["quantity"] * info["price"] }}</td>
+        </tr>
+        {% endfor %}
+        <tr style="
+            font-size: 20px;
+            font-weight: bold;
+            border-top: 2px solid black;
+          ">
+          <td>Total</td>
+          <td></td>
+          <td></td>
+          <td>{{total_amount}}</td>
+        </tr>
+      </table>
+    </div>
+
+    <button id="spdf" class="btn btn-primary my-3 px-5">Send Order</button>
+  </div>
 </div>
-</div>
-  {% endblock body %}
+
+<!-- Load the required libraries -->
+
+<script src="https://cdnjs.cloudflare.com/ajax/libs/jspdf/2.5.0/jspdf.umd.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/FileSaver.js/2.0.5/FileSaver.min.js"></script>
+
+<!-- Include pdfmake and html2canvas -->
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.2/pdfmake.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.2/vfs_fonts.js"></script>
+<script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
+
+<!-- Your button element -->
+
+<!-- Your JavaScript code -->
+<script>
+  const button = document.getElementById("spdf");
+
+  button.addEventListener("click", () => {
+    // Get the HTML content of the div with id "rrr"
+    const html = document.getElementById("rrr");
+
+    // Convert the HTML to a pdfmake-compatible format using html2canvas
+    html2canvas(html).then((canvas) => {
+      const imgData = canvas.toDataURL("image/png");
+      const pdfWidth = canvas.width * 1;
+      const pdfHeight = canvas.height * 1;
+      const pdf = {
+        pageSize: { width: pdfWidth, height: pdfHeight },
+        pageMargins: [0, 0, 0, 0], // Set margins to 0
+        content: [
+          {
+            image: imgData,
+            width: pdfWidth,
+            height: pdfHeight, // Set height to match PDF height
+          },
+        ],
+      };
+      pdfMake.createPdf(pdf).download("page.pdf");
+    });
+  });
+</script>
+
+{% endblock body %}

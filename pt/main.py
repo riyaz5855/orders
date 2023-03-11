@@ -36,7 +36,7 @@ class Product(db.Model):
     sizes_prices = db.Column(db.String(500), nullable=False)
     colors = db.Column(db.String(500), nullable=False)
     description = db.Column(db.String(2000), nullable=False)
-    imageAdd = db.Column(db.String(2000), nullable=False)
+    imageAdd = db.Column(db.String(500), nullable=False)
 
 
 # # create the database
@@ -153,6 +153,7 @@ def order():
 @app.route('/summary', methods=['POST','GET'])
 def summary():
     if request.method == 'POST':
+        name=request.form['name']
         data=request.form.getlist('data')
         data2=request.form.getlist('ddata')
         ddata=[]
@@ -170,12 +171,31 @@ def summary():
         grouped_list = list(grouped_data.values())
         smry = [lst for lst in grouped_list if any(int(item[0]) > 0 for item in lst)]
         
-        s= [[i[4],i[5]]for i in smry[0]]
+        s= [[i[4],int(i[5])]for i in smry[0]]
         c= [[i[0][1],i[0][2],i[0][3]] for i in smry]
-        q=[[j[0] for j in i] for i in smry]
+        q=[[int(j[0]) for j in i] for i in smry]
         cq=list(zip(c,q))
 
-    return render_template('summary.html',s=s,cq=cq)
+        
+        # create a dictionary to store the size and quantity information
+        size_dict = {}
+        for i, size_info in enumerate(s):
+            # get the size code and price from the size_info sublist
+            size_code, price = size_info
+            # get the corresponding quantity sublist from l2 and sum the values
+            quantity = sum([sublist[i] for sublist in q])
+            # store the size and quantity information in the dictionary
+            size_dict[size_code] = {"quantity": quantity, "price": price}
+
+        # calculate the total price
+        amount_list=[]
+        for info in size_dict.values():
+            price = info["quantity"] * info["price"]
+            amount_list.append(price)
+        total_amount=sum(amount_list)
+
+
+    return render_template('summary.html',s=s,cq=cq,name=name,size_dict=size_dict,total_amount=total_amount)
 
 
 # convert database product string into list
