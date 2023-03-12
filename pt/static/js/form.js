@@ -8,6 +8,7 @@ $('input[type="checkbox"]').change(function () {
     } else {
       $('#' + inputId).addClass('hidden-input');
       $('#' + inputId).prop('required',false);
+      $('#' + inputId).val(''); // set input value to empty string
     }
 });
 

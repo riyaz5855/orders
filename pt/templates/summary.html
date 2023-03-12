@@ -61,8 +61,10 @@
         </tr>
       </table>
     </div>
-
-    <button id="spdf" class="btn btn-primary my-3 px-5">Send Order</button>
+    <form method="POST" action="{{ url_for('success') }}">
+      <input type="hidden" name="data" value="{{l}}" />
+      <button type="submit" id="spdf" class="btn btn-primary my-3 px-5">Send Order</button>
+    </form>
   </div>
 </div>
 

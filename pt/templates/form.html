@@ -13,7 +13,7 @@
         <!-- name -->
         <div class="form-group mt-2">
           <label for="name">Name</label>
-          <input type="text" class="form-control" id="name" name="name" placeholder="Enter name" />
+          <input type="text" class="form-control" id="name" name="name" maxlength="50" required placeholder="Enter name" />
         </div>
 
 
@@ -60,7 +60,7 @@
         <!-- description -->
         <div class="form-group mt-3">
           <label for="description">Description</label>
-          <textarea class="form-control mt-2" id="description" name="description" rows="3"></textarea>
+          <textarea class="form-control mt-2" id="description" name="description" rows="3" maxlength="1500" required></textarea>
         </div>
 
 
@@ -69,7 +69,7 @@
             <label for="photo" class="col-sm-2 control-label mt-3">Upload</label>
             <div>
               <input type="file" class="form-control mt-2" name="photo" id="photo" accept=".png, .jpg, .jpeg"
-                onchange="readFile(this);" multiple>
+                onchange="readFile(this);" max="10" size="1000000" multiple required>
             </div>
           </div>
           <div id="status"></div>

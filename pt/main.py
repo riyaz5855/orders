@@ -28,20 +28,26 @@ class Size(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
 
+# define the smry data model
+class Smry(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(60), nullable=False)
+    data = db.Column(db.String(2000), nullable=False)
+
 
 # define the form data model
 class Product(db.Model):
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
-    sizes_prices = db.Column(db.String(500), nullable=False)
-    colors = db.Column(db.String(500), nullable=False)
-    description = db.Column(db.String(2000), nullable=False)
-    imageAdd = db.Column(db.String(500), nullable=False)
+    sizes_prices = db.Column(db.String(200), nullable=False)
+    colors = db.Column(db.String(1500), nullable=False)
+    description = db.Column(db.String(1500), nullable=False)
+    imageAdd = db.Column(db.String(600), nullable=False)
 
 
-# # create the database
-# with app.app_context():
-#     db.create_all()
+# create the database
+with app.app_context():
+    db.create_all()
 
 
 # admin panel
@@ -49,6 +55,7 @@ admin = Admin(app, name='Admin Panel', template_mode='bootstrap4')
 admin.add_view(ModelView(FormData, db.session))
 admin.add_view(ModelView(Size, db.session))
 admin.add_view(ModelView(Product, db.session))
+admin.add_view(ModelView(Smry, db.session))
 
 
 # home page
@@ -67,6 +74,8 @@ def home():
 @app.route('/contactus')
 def contactus():
     return render_template('contactus.html')
+
+
 
 # product form
 @app.route('/form', methods=['POST','GET'])
@@ -193,9 +202,25 @@ def summary():
             price = info["quantity"] * info["price"]
             amount_list.append(price)
         total_amount=sum(amount_list)
+        l=str([s,cq,name,size_dict,total_amount])
+
+    return render_template('summary.html',s=s,cq=cq,name=name,size_dict=size_dict,total_amount=total_amount,l=l)
 
 
-    return render_template('summary.html',s=s,cq=cq,name=name,size_dict=size_dict,total_amount=total_amount)
+
+# success page
+@app.route('/success', methods=['POST','GET'])
+def success():
+    if request.method == "POST":
+        name="dfjlkgdf"
+        data = request.form['data']
+        smry = Smry(name=name,data=data)
+        db.session.add(smry)
+        db.session.commit()
+
+    return render_template('success.html')
+
+
 
 
 # convert database product string into list
