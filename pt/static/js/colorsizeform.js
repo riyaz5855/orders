@@ -22,3 +22,10 @@ addSizeButton.addEventListener("click", function () {
     addColorButton.classList.remove('btn-primary');
     addColorButton.classList.add('btn-secondary');
 });
+
+// only alphanumeric and _
+function onlyAlphanumericUnderscore(event) {
+    var input = event.target;
+    input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+}
+  

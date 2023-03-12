@@ -19,7 +19,7 @@
             <form id="color-form" class="col-3 border p-3" method="POST" action="{{ url_for('colorsizeform') }}">
                 <div class="form-group">
                     <label for="name">Name:</label>
-                    <input type="text" id="name" name="name" class="form-control" maxlength="50" required />
+                    <input type="text" id="name" name="name" class="form-control" maxlength="50" oninput="onlyAlphanumericUnderscore(event)" required />
                 </div>
                 <div class="form-group">
                     <label for="number">Number:</label>
@@ -39,7 +39,7 @@
             <form id="size-form" class="col-3 border py-3" style="display: none;" method="POST" action="{{ url_for('colorsizeform') }}">
                 <div class="form-group my-3">
                     <label for="size">Size:</label>
-                    <input type="text" class="form-control" id="size" name="size" maxlength="50" required />
+                    <input type="text" class="form-control" id="size" name="size" maxlength="50" oninput="onlyAlphanumericUnderscore(event)" required />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

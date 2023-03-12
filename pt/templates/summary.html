@@ -61,12 +61,14 @@
         </tr>
       </table>
     </div>
-    <form method="POST" action="{{ url_for('success') }}">
-      <input type="hidden" name="data" value="{{l}}" />
       <button type="submit" id="spdf" class="btn btn-primary my-3 px-5">Send Order</button>
-    </form>
   </div>
 </div>
+<form method="POST" action="/success" style="display:none;" id="hidden-form">
+  <input type="text" name="data" value="{{l}}" />
+  <button id="hdn" type="submit">Submit</button>
+</form>
+
 
 <!-- Load the required libraries -->
 
@@ -78,7 +80,7 @@
 <script src="https://cdnjs.cloudflare.com/ajax/libs/pdfmake/0.2.2/vfs_fonts.js"></script>
 <script src="https://html2canvas.hertzen.com/dist/html2canvas.min.js"></script>
 
-<!-- Your button element -->
+
 
 <!-- Your JavaScript code -->
 <script>
@@ -104,7 +106,10 @@
           },
         ],
       };
-      pdfMake.createPdf(pdf).download("page.pdf");
+      pdfMake.createPdf(pdf).download("page.pdf", function() {
+        var button = document.getElementById("hdn");
+        button.click();
+      });      
     });
   });
 </script>

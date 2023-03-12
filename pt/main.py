@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request
+from flask import Flask, render_template, request, url_for
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -212,13 +212,28 @@ def summary():
 @app.route('/success', methods=['POST','GET'])
 def success():
     if request.method == "POST":
-        name="dfjlkgdf"
+        name= str(datetime.utcnow().timestamp()) + '_' + str(random.randint(1, 10000))
         data = request.form['data']
         smry = Smry(name=name,data=data)
         db.session.add(smry)
         db.session.commit()
+        url = url_for('receipt', odrname=name, _external=True)
 
-    return render_template('success.html')
+    return render_template('success.html',url=url)
+
+
+
+# receipt page
+@app.route('/receipt/<odrname>')
+def receipt(odrname):
+    rpt=Smry.query.filter_by(name=odrname).first()
+    smry=ast.literal_eval(rpt.data)
+    s,cq,name,size_dict,total_amount = smry
+
+    print("---------------------------------------------------------")
+    print(smry)
+    return render_template('receipt.html',s=s,cq=cq,name=name,size_dict=size_dict,total_amount=total_amount)
+
 
 
 

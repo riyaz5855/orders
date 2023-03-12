@@ -30,3 +30,10 @@ function readFile(input) {
     }
     if (counter == x) { $("#status").html(''); }
 }
+
+
+// only alphanumeric and _
+function onlyAlphanumericUnderscore(event) {
+  var input = event.target;
+  input.value = input.value.replace(/[^a-zA-Z0-9_]/g, '');
+}
