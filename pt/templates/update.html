@@ -1,0 +1,82 @@
+{% extends 'base.html' %} {% block body %}
+
+<link rel="stylesheet" href="{{url_for('static',filename='css/form.css')}}" />
+
+<!-- form -->
+
+<div class="container">
+  <div class="row justify-content-center">
+    <div class="col-md-7">
+      <h1 class="mt-2">Update Product Form</h1>
+
+      <form enctype="multipart/form-data" method="POST" action="{{ url_for('form') }}">
+        <!-- name -->
+        <div class="form-group mt-2">
+          <label for="name">Name</label>
+          <input type="text" value="{{l[6]}}" class="form-control" id="name" name="name" maxlength="50" required
+            placeholder="Enter name" oninput="onlyAlphanumericUnderscore(event)" />
+        </div>
+
+        <div class="row justify-content-between">
+          <div class="col-md-5">
+            <!-- size and price -->
+
+            <!-- Custom CSS -->
+
+            <label class="mt-3" for="color">sizes / prices</label><br />
+
+            <div class="form-group mt-2">
+             
+          </div>
+
+          <!-- colors -->
+
+          <div class="col-md-7">
+            <label class="mt-3" for="color">Colors</label>
+            <div class="form-group mt-2">
+              {% for color in form_data %}
+              <div class="form-check form-check-inline">
+                <input class="form-check-input" value="{{color.name}}-{{color.number}}-{{color.color}}" type="checkbox"
+                  name="color" id="color-{{color.name}}" {% if color.color in l[2] %} checked {% endif %} />
+                <label class="form-check-label" for="color-{{color.name}}"><span class="color-swatch rounded"
+                    style="background-color: {{color.color}}; width:15rem; height:2rem"></span>
+                  {{color.name}}</label>
+              </div>
+              {% endfor %}
+            </div>
+          </div>
+        </div>
+
+        <!-- description -->
+        <div class="form-group mt-3">
+          <label for="description">Description</label>
+          <textarea class="form-control mt-2" id="description" name="description" rows="3" maxlength="1500" required>
+            {{l[7]}}</textarea>
+        </div>
+
+        <div>
+          <div class="form-group">
+            <label for="photo" class="col-sm-2 control-label mt-3">Upload</label>
+            <div>
+              <input type="file" class="form-control mt-2" name="photo" id="photo" accept=".png, .jpg, .jpeg"
+                onchange="readFile(this);" max="10" size="1000000" multiple required />
+            </div>
+          </div>
+          <div id="status"></div>
+          <div id="photos" class="row py-3"></div>
+        </div>
+
+        <!-- submit -->
+        <button type="submit" class="btn btn-primary my-3 px-5">Submit</button>
+      </form>
+    </div>
+  </div>
+</div>
+
+<!-- Bootstrap JS -->
+<script src="https://code.jquery.com/jquery-3.2.1.slim.min.js"></script>
+<script src="https://cdnjs.cloudflare.com/ajax/libs/popper.js/1.12.9/umd/popper.min.js"></script>
+<script src="https://maxcdn.bootstrapcdn.com/bootstrap/4.0.0/js/bootstrap.min.js"></script>
+<script src="{{ url_for('static', filename='js/form.js') }}"></script>
+
+{% endblock body %}

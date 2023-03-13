@@ -66,8 +66,6 @@ def home():
     for product in products:
         l = stl(product)
         products_stl.append(l)
-
-    print(products_stl)
     return render_template('home.html',products=products_stl)
 
 # contactus page
@@ -229,10 +227,44 @@ def receipt(odrname):
     rpt=Smry.query.filter_by(name=odrname).first()
     smry=ast.literal_eval(rpt.data)
     s,cq,name,size_dict,total_amount = smry
-
-    print("---------------------------------------------------------")
-    print(smry)
     return render_template('receipt.html',s=s,cq=cq,name=name,size_dict=size_dict,total_amount=total_amount)
+
+
+
+
+
+# dsb page
+@app.route('/dsb')
+def dsb():
+    products = Product.query.all()
+    products_stl=[]
+    for product in products:
+        l = stl(product)
+        products_stl.append(l)
+    return render_template('dsb.html',products=products_stl)
+
+
+
+
+# update page
+@app.route('/update/<int:id>')
+def update(id):
+    productstr = Product.query.filter_by(id=id).first()
+    product = stl(productstr)
+    i=product.id
+    name=product.name
+    s=[i[0] for i in product.sizes_prices]
+    p=[i[1] for i in product.sizes_prices]
+    c0=[i[0] for i in product.colors]
+    c1=[i[1] for i in product.colors]
+    c2=[i[2] for i in product.colors]
+    description=product.description
+    imageAdd=product.imageAdd
+    l=[s,p,c0,c1,c2,i,name,description,imageAdd]
+    form_data = FormData.query.all()
+    size_data = Size.query.all()
+    print (product)
+    return render_template('update.html', l=l, form_data=form_data, size_data=size_data)
 
 
 

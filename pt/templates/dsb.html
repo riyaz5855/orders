@@ -1,0 +1,49 @@
+{% extends 'base.html' %} {% block body %}
+
+
+<div class="container-fluid">
+    <div class="row justify-content-center">
+        <div class="col-lg-11">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th scope="col">#</th>
+                        <th scope="col">Names</th>
+                        <th scope="col">Sizes/Prices</th>
+                        <th scope="col">Colors</th>
+                        <th scope="col">Description</th>
+                        <th scope="col">Images</th>
+                        <th scope="col">Edit/Delete</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for product in products %}
+                    <tr>
+                        <th scope="row">1</th>
+                        <td>{{product.name}}</td>
+                        <td>
+                            {% for size,price in product.sizes_prices %}
+                            {{size}} - {{price}},<br>
+                            {% endfor %}
+                        </td>
+                        <td>
+                            {% for color,number,shade in product.colors %}
+                            {{color}}-{{number}},
+                            {% endfor %}
+                        </td>
+                        <td>{{product.description}}</td>
+                        <td><img src="{{ url_for('static', filename='uploads/' + product.imageAdd[0]) }}" class="card-img-top" alt="{{product.imageAdd}}" style="height: 200px;"></td>
+                        <td>
+                            <a type="button" href="{{ url_for('update', id=product.id) }}" class="btn btn-primary m-2 px-4">Edit</a>
+                            <a type="button" href="{{ url_for('update', id=product.id) }}" class="btn btn-danger m-2 px-3">Delete</a>
+                        </td>
+                    </tr>
+                    {% endfor %}
+    </tbody>
+</table>
+
+</div>
+</div>
+</div>
+
+{% endblock body %}
