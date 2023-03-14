@@ -1,4 +1,4 @@
-from flask import Flask, render_template, request, url_for
+from flask import Flask, render_template, request, url_for, redirect
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -45,9 +45,9 @@ class Product(db.Model):
     imageAdd = db.Column(db.String(600), nullable=False)
 
 
-# create the database
-with app.app_context():
-    db.create_all()
+# # create the database
+# with app.app_context():
+#     db.create_all()
 
 
 # admin panel
@@ -247,23 +247,69 @@ def dsb():
 
 
 # update page
-@app.route('/update/<int:id>')
+@app.route('/update/<int:id>', methods=['POST','GET'])
 def update(id):
+    product = Product.query.get_or_404(id)
+    # d=product["imageAdd"]
+    print("---------------------------------------------")
+    print(type(product))
+    print(product)
+    if request.method == 'POST':
+        new_name = request.form['name']
+        product.name = new_name
+
+        sizes = request.form.getlist('size')
+        prices = [i for i in request.form.getlist('price') if i!='']
+        new_sizes_prices = str(list(zip(sizes,prices)))
+        product.sizes_prices = new_sizes_prices
+
+        colors = request.form.getlist('color')
+        colors_list = []
+        for color in colors:
+            color_parts = color.split('-')
+            colors_list.append(color_parts)
+        new_colors_list = str(colors_list)
+        product.colors = new_colors_list
+
+        new_description = str(request.form['description'])
+        product.description = new_description
+        
+        files = request.files.getlist('photo')
+        
+        if files[0].filename != '':
+            d=product[imageAdd]
+            # create a directory to store the files if it doesn't exist
+            UPLOADS_FOLDER = os.path.join(app.static_folder, 'uploads')
+            if not os.path.exists(UPLOADS_FOLDER):
+                os.makedirs(UPLOADS_FOLDER)
+            
+            # loop through the files and save them to the server
+            imageAdds = []
+            for file in files:
+                # generate a unique filename using timestamp and random string
+                unique_filename = str(datetime.utcnow().timestamp()) + '_' + str(random.randint(1, 1000)) + '_' + file.filename
+                file_path = os.path.join('static/uploads', unique_filename)
+                file.save(file_path)
+                imageAdds.append(unique_filename)
+            
+            new_imageAddss = str(imageAdds)
+            product.imageAdd = new_imageAddss
+        db.session.commit()
+        return redirect(url_for('dsb'))
+
+
     productstr = Product.query.filter_by(id=id).first()
     product = stl(productstr)
-    i=product.id
-    name=product.name
-    s=[i[0] for i in product.sizes_prices]
-    p=[i[1] for i in product.sizes_prices]
-    c0=[i[0] for i in product.colors]
-    c1=[i[1] for i in product.colors]
-    c2=[i[2] for i in product.colors]
-    description=product.description
-    imageAdd=product.imageAdd
-    l=[s,p,c0,c1,c2,i,name,description,imageAdd]
+    i=int(product["id"])
+    name=product["name"]
+    s=[i[0] for i in product["sizes_prices"]]
+    p=[i[1] for i in product["sizes_prices"]]
+    c=[i[2] for i in product["colors"]]
+    description=product["description"]
+    imageAdd=product["imageAdd"]
+    l=[s,p,c,i,name,description,imageAdd]
     form_data = FormData.query.all()
     size_data = Size.query.all()
-    print (product)
     return render_template('update.html', l=l, form_data=form_data, size_data=size_data)
 
 

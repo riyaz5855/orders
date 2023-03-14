@@ -15,6 +15,7 @@ $('input[type="checkbox"]').change(function () {
 // script for image preview
 function readFile(input) {
     $("#status").html('Processing...');
+    $("#photos").empty();
     counter = input.files.length;
     for (x = 0; x < counter; x++) {
     if (input.files && input.files[x]) {

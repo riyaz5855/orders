@@ -9,23 +9,33 @@
     <div class="col-md-7">
       <h1 class="mt-2">Update Product Form</h1>
 
-      <form enctype="multipart/form-data" method="POST" action="{{ url_for('form') }}">
+      <form enctype="multipart/form-data" method="POST" action="{{ url_for('update',id=l[3] )}}">
         <!-- name -->
         <div class="form-group mt-2">
           <label for="name">Name</label>
-          <input type="text" value="{{l[6]}}" class="form-control" id="name" name="name" maxlength="50" required
+          <input type="text" value="{{l[4]}}" class="form-control" id="name" name="name" maxlength="50" required
             placeholder="Enter name" oninput="onlyAlphanumericUnderscore(event)" />
         </div>
 
         <div class="row justify-content-between">
+          
+          <!-- size and price -->
           <div class="col-md-5">
-            <!-- size and price -->
-
-            <!-- Custom CSS -->
-
+            
             <label class="mt-3" for="color">sizes / prices</label><br />
 
             <div class="form-group mt-2">
+              {% set count = namespace(value=-1) %}
+              {% for size in size_data %}
+                <div class="form-check">
+                  <input class="form-check-input" value="{{size.name}}" type="checkbox" name="size"
+                    id="checkbox-{{size.name}}" {% if size.name in l[0] %} checked {% set count.value = count.value + 1 %}{% endif %} >
+                  <label class="form-check-label" for="checkbox-{{size.name}}">{{size.name}}</label>
+                  <input class="form-control {% if not size.name in l[0] %} hidden-input {% endif %}" type="number" class="price" id="input-{{size.name}}"
+                    name="price" {% if size.name in l[0] %} value={{l[1][count.value]}} {% endif %} placeholder="Price">
+                </div>
+                {% endfor %}
+            </div>
              
           </div>
 
@@ -50,24 +60,29 @@
         <!-- description -->
         <div class="form-group mt-3">
           <label for="description">Description</label>
-          <textarea class="form-control mt-2" id="description" name="description" rows="3" maxlength="1500" required>
-            {{l[7]}}</textarea>
+          <textarea class="form-control mt-2" id="description" name="description" rows="3" maxlength="1500" required>{{l[5]}}</textarea>
         </div>
 
+        
         <div>
           <div class="form-group">
             <label for="photo" class="col-sm-2 control-label mt-3">Upload</label>
             <div>
+              <label style="color: red;">Note: If you upload any new image, all existing images will be removed</label>           
               <input type="file" class="form-control mt-2" name="photo" id="photo" accept=".png, .jpg, .jpeg"
-                onchange="readFile(this);" max="10" size="1000000" multiple required />
+                onchange="readFile(this);" max="10" size="1000000" multiple />
             </div>
           </div>
           <div id="status"></div>
-          <div id="photos" class="row py-3"></div>
+          <div id="photos" class="row py-3">
+            {% for i in l[6] %}
+            <div class="col-md-3 col-sm-3 col-xs-3"><img src="{{ url_for('static', filename='uploads/' + i) }}" class="img-thumbnail"></div>
+            {% endfor %}
+          </div>
         </div>
 
         <!-- submit -->
-        <button type="submit" class="btn btn-primary my-3 px-5">Submit</button>
+        <button type="submit" class="btn btn-primary my-3 px-5">Update</button>
       </form>
     </div>
   </div>
