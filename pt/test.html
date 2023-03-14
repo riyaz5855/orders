@@ -1,23 +1,41 @@
-<label class="mt-3" for="color">sizes / prices</label><br />
+For example, let's say you have a Product model in your SQLAlchemy-based Flask application. You could add an expiry_time column to this model to store the expiry time for each product:
 
-<div class="form-group mt-2">
-  {% for size in size_data %}
-  <div class="form-check">
-    {% if size.name in l[0] %}
-    <input class="form-check-input" value="{{size.name}}" type="checkbox" name="size"
-      id="checkbox-{{size.name}}" checked  />
-    <label class="form-check-label" for="checkbox-{{size.name}}">{{size.name}}</label>
-    <input class="form-control" type="number" class="price" id="input-{{size.name}}"
-      name="price" placeholder="Price" value="{{}}" />
-      {% else %}
-      <input class="form-check-input" value="{{size.name}}" type="checkbox" name="size"
-        id="checkbox-{{size.name}}" 
-         checked  />
-      <label class="form-check-label" for="checkbox-{{size.name}}">{{size.name}}</label>
-      <input class="form-control hidden-input" type="number" class="price" id="input-{{size.name}}"
-        name="price" placeholder="Price" />
-      {% endif %}
-  </div>
-  {% endfor %}
-</div>
-</div>
+python
+Copy code
+from datetime import datetime, timedelta
+from sqlalchemy import Column, DateTime
+
+class Product(db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(100))
+    price = db.Column(db.Float)
+    expiry_time = db.Column(DateTime)
+You can then set the expiry time when creating a new product:
+
+python
+Copy code
+product = Product(name='Product Name', price=9.99, expiry_time=datetime.utcnow() + timedelta(days=7))
+db.session.add(product)
+db.session.commit()
+To periodically delete expired products, you can create a separate script or a Flask command that runs in the background and periodically checks for expired products. For example:
+
+python
+Copy code
+from datetime import datetime
+from flask import Flask
+from flask.cli import with_appcontext
+
+app = Flask(__name__)
+
+@app.cli.command('delete-expired-products')
+@with_appcontext
+def delete_expired_products():
+    expired_products = Product.query.filter(Product.expiry_time < datetime.utcnow()).all()
+    for product in expired_products:
+        db.session.delete(product)
+    db.session.commit()
+You can then run this command periodically using a task scheduler or a cron job. For example, to run the command every day at midnight, you can add the following line to your crontab:
+
+javascript
+Copy code
+0 0 * * * /path/to/your/virtualenv/bin/flask delete-expired-products

@@ -17,7 +17,9 @@ db = SQLAlchemy(app)
 
 
 # define the form data model
-class FormData(db.Model):
+class Color(db.Model):
+    __tablename__ = "color"
+
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
     number = db.Column(db.Integer, nullable=False)
@@ -25,11 +27,19 @@ class FormData(db.Model):
 
 # define the size data model
 class Size(db.Model):
+    __tablename__ = "size"
+    id = db.Column(db.Integer, primary_key=True)
+    name = db.Column(db.String(50), nullable=False)
+
+# define the category data model
+class Category(db.Model):
+    __tablename__ = "category"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
 
 # define the smry data model
 class Smry(db.Model):
+    __tablename__ = "smry"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(60), nullable=False)
     data = db.Column(db.String(2000), nullable=False)
@@ -37,25 +47,28 @@ class Smry(db.Model):
 
 # define the form data model
 class Product(db.Model):
+    __tablename__ = "roduct"
     id = db.Column(db.Integer, primary_key=True)
     name = db.Column(db.String(50), nullable=False)
+    category = db.Column(db.String(50), nullable=False)
     sizes_prices = db.Column(db.String(200), nullable=False)
     colors = db.Column(db.String(1500), nullable=False)
     description = db.Column(db.String(1500), nullable=False)
     imageAdd = db.Column(db.String(600), nullable=False)
 
 
-# # create the database
-# with app.app_context():
-#     db.create_all()
+# create the database
+with app.app_context():
+    db.create_all()
 
 
 # admin panel
 admin = Admin(app, name='Admin Panel', template_mode='bootstrap4')
-admin.add_view(ModelView(FormData, db.session))
+admin.add_view(ModelView(Color, db.session))
 admin.add_view(ModelView(Size, db.session))
 admin.add_view(ModelView(Product, db.session))
 admin.add_view(ModelView(Smry, db.session))
+admin.add_view(ModelView(Category, db.session))
 
 
 # home page
@@ -80,7 +93,7 @@ def contactus():
 def form():
     if request.method == 'POST':
         name = request.form['name']
-
+        category = request.form['category']
         sizes = request.form.getlist('size')
         prices = [i for i in request.form.getlist('price') if i!='']
         sizes_prices = str(list(zip(sizes,prices)))
@@ -110,14 +123,15 @@ def form():
             imageAdds.append(unique_filename)
         
         imageAddss=str(imageAdds)
-        product = Product(name=name,sizes_prices=sizes_prices,colors=colors_list,description=description,imageAdd=imageAddss)
+        product = Product(name=name,category=category,sizes_prices=sizes_prices,colors=colors_list,description=description,imageAdd=imageAddss)
         db.session.add(product)
         db.session.commit()
 
 
-    form_data = FormData.query.all()
+    color_data = Color.query.all()
     size_data = Size.query.all()
-    return render_template('form.html', form_data=form_data, size_data=size_data)
+    category_data = Category.query.all()
+    return render_template('form.html', color_data=color_data, size_data=size_data, category_data=category_data)
 
 
 # color size form
@@ -131,16 +145,22 @@ def colorsizeform():
             color = request.form['color']
 
             # create a new form data object
-            form_data = FormData(name=name, number=number, color=color)
+            color_data = Color(name=name, number=number, color=color)
 
             # add the form data to the database
-            db.session.add(form_data)
+            db.session.add(color_data)
             db.session.commit()
 
         elif "size" in request.form.keys():
             name = request.form['size']
             size = Size(name=name)
             db.session.add(size)
+            db.session.commit()
+        
+        elif "category" in request.form.keys():
+            name = request.form['category']
+            category = Category(name=name)
+            db.session.add(category)
             db.session.commit()
 
     # render a thank you message
@@ -161,6 +181,7 @@ def order():
 def summary():
     if request.method == 'POST':
         name=request.form['name']
+        category=request.form['category']
         data=request.form.getlist('data')
         data2=request.form.getlist('ddata')
         ddata=[]
@@ -200,9 +221,9 @@ def summary():
             price = info["quantity"] * info["price"]
             amount_list.append(price)
         total_amount=sum(amount_list)
-        l=str([s,cq,name,size_dict,total_amount])
+        l=str([s,cq,name,size_dict,total_amount,category])
 
-    return render_template('summary.html',s=s,cq=cq,name=name,size_dict=size_dict,total_amount=total_amount,l=l)
+    return render_template('summary.html',s=s,cq=cq,name=name,size_dict=size_dict,category=category,total_amount=total_amount,l=l)
 
 
 
@@ -226,11 +247,8 @@ def success():
 def receipt(odrname):
     rpt=Smry.query.filter_by(name=odrname).first()
     smry=ast.literal_eval(rpt.data)
-    s,cq,name,size_dict,total_amount = smry
-    return render_template('receipt.html',s=s,cq=cq,name=name,size_dict=size_dict,total_amount=total_amount)
-
-
-
+    s,cq,name,size_dict,total_amount,category = smry
+    return render_template('receipt.html',s=s,cq=cq,name=name,size_dict=size_dict,total_amount=total_amount,category=category)
 
 
 # dsb page
@@ -244,19 +262,16 @@ def dsb():
     return render_template('dsb.html',products=products_stl)
 
 
-
-
 # update page
 @app.route('/update/<int:id>', methods=['POST','GET'])
 def update(id):
     product = Product.query.get_or_404(id)
-    # d=product["imageAdd"]
-    print("---------------------------------------------")
-    print(type(product))
-    print(product)
     if request.method == 'POST':
         new_name = request.form['name']
         product.name = new_name
+
+        new_category = request.form['category']
+        product.category = new_category
 
         sizes = request.form.getlist('size')
         prices = [i for i in request.form.getlist('price') if i!='']
@@ -277,7 +292,6 @@ def update(id):
         files = request.files.getlist('photo')
         
         if files[0].filename != '':
-            d=product[imageAdd]
             # create a directory to store the files if it doesn't exist
             UPLOADS_FOLDER = os.path.join(app.static_folder, 'uploads')
             if not os.path.exists(UPLOADS_FOLDER):
@@ -293,6 +307,14 @@ def update(id):
                 imageAdds.append(unique_filename)
             
             new_imageAddss = str(imageAdds)
+
+            # delete existing image
+            old_images=ast.literal_eval(product.imageAdd)
+            # loop through the files and delete each one
+            for old_image in old_images:
+                print(old_image)
+                # if old_image in files:
+                os.remove(os.path.join('static/uploads', old_image))
             product.imageAdd = new_imageAddss
         db.session.commit()
         return redirect(url_for('dsb'))
@@ -302,29 +324,46 @@ def update(id):
     product = stl(productstr)
     i=int(product["id"])
     name=product["name"]
+    category=product["category"]
     s=[i[0] for i in product["sizes_prices"]]
     p=[i[1] for i in product["sizes_prices"]]
     c=[i[2] for i in product["colors"]]
     description=product["description"]
     imageAdd=product["imageAdd"]
-    l=[s,p,c,i,name,description,imageAdd]
-    form_data = FormData.query.all()
+    l=[s,p,c,i,name,description,imageAdd,category]
+    color_data = Color.query.all()
     size_data = Size.query.all()
-    return render_template('update.html', l=l, form_data=form_data, size_data=size_data)
+    category_data = Category.query.all()
+    return render_template('update.html', l=l, color_data=color_data, size_data=size_data, category_data=category_data)
 
 
 
+# delete page
+@app.route('/delete/<int:id>', methods=['POST','GET'])
+def delete(id):
+    product = Product.query.get_or_404(id)
+    # delete existing image
+    old_images=ast.literal_eval(product.imageAdd)
+    # loop through the files and delete each one
+    for old_image in old_images:
+        print(old_image)
+        # if old_image in files:
+        os.remove(os.path.join('static/uploads', old_image))
+    db.session.delete(product)
+    db.session.commit()
+    return redirect(url_for('dsb'))
 
 
 # convert database product string into list
 def stl(product):
     id = product.id
     name = product.name
+    category = product.category
     sizes_prices = ast.literal_eval(product.sizes_prices)
     colors = ast.literal_eval(product.colors)
     description = product.description
     imageAdd = ast.literal_eval(product.imageAdd)
-    l={'id':id,'name':name,'sizes_prices':sizes_prices,'colors':colors,'description':description,'imageAdd':imageAdd}
+    l={'id':id,'name':name, 'category':category, 'sizes_prices':sizes_prices,'colors':colors,'description':description,'imageAdd':imageAdd}
     return l
 
 

@@ -35,7 +35,7 @@
                         <td><img src="{{ url_for('static', filename='uploads/' + product.imageAdd[0]) }}" class="card-img-top" alt="{{product.imageAdd}}" style="height: 200px;"></td>
                         <td>
                             <a type="button" href="{{ url_for('update', id=product.id) }}" class="btn btn-primary m-2 px-4">Edit</a>
-                            <a type="button" href="{{ url_for('update', id=product.id) }}" class="btn btn-danger m-2 px-3">Delete</a>
+                            <a type="button" href="{{ url_for('delete', id=product.id) }}" class="btn btn-danger m-2 px-3" onclick="return confirm('Are you sure you want to delete this item?')">Delete</a>
                         </td>
                     </tr>
                     {% endfor %}

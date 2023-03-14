@@ -11,6 +11,10 @@
                 <button type="button" class="btn btn-secondary" id="add-size-button">
                     Add Size
                 </button>
+               
+                <button type="button" class="btn btn-secondary" id="add-category-button">
+                    Add Category
+                </button>
             </div>
         </div>
 
@@ -40,6 +44,16 @@
                 <div class="form-group my-3">
                     <label for="size">Size:</label>
                     <input type="text" class="form-control" id="size" name="size" maxlength="50" oninput="onlyAlphanumericUnderscore(event)" required />
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+            </form>
+            
+            
+            <!-- category -->
+            <form id="category-form" class="col-3 border py-3" style="display: none;" method="POST" action="{{ url_for('colorsizeform') }}">
+                <div class="form-group my-3">
+                    <label for="category">Category:</label>
+                    <input type="text" class="form-control" id="category" name="category" maxlength="50" oninput="onlyAlphanumericUnderscore(event)" required />
                 </div>
                 <button type="submit" class="btn btn-primary">Submit</button>
             </form>

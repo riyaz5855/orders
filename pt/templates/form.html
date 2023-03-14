@@ -15,7 +15,17 @@
           <label for="name">Name</label>
           <input type="text" class="form-control" id="name" name="name" maxlength="50" required placeholder="Enter name" oninput="onlyAlphanumericUnderscore(event)" />
         </div>
-
+        
+        
+        <!-- category -->
+        <div class="form-group mt-2">
+          <label for="name">Category</label>
+          <select class="form-select mt-2"  name="category" aria-label="Default select example">
+            {% for category in category_data %}
+            <option value="{{category.name}}">{{category.name}}</option>
+            {% endfor %}
+          </select>
+        </div>
 
         <div class="row justify-content-between">
           
@@ -42,7 +52,7 @@
           <div class="col-md-7">
             <label class="mt-3" for="color">Colors</label>
             <div class="form-group mt-2">
-              {% for color in form_data %}
+              {% for color in color_data %}
               <div class="form-check form-check-inline">
                 <input class="form-check-input" value="{{color.name}}-{{color.number}}-{{color.color}}" type="checkbox"
                   name="color" id="color-{{color.name}}" />
