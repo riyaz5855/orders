@@ -1,0 +1,29 @@
+.card-container {
+width: 100%;
+white-space: nowrap;
+overflow-x: auto;
+}
+.card {
+display: inline-block;
+width: 18rem;
+margin-right: 10px;
+}
+.card-body {
+max-width: 100%;
+overflow: hidden;
+padding: 15px;
+}
+.card-text p {
+    white-space: normal;
+}
+::-webkit-scrollbar {
+display: none;
+}
+span.limited {
+    display: inline-block;
+    max-width: 24ch;
+    overflow: hidden;
+    white-space: nowrap;
+    text-overflow: ellipsis;
+  }
+  

@@ -79,7 +79,8 @@ def home():
     for product in products:
         l = stl(product)
         products_stl.append(l)
-    return render_template('home.html',products=products_stl)
+    category_data = Category.query.all()
+    return render_template('home.html',products=products_stl,category_data=category_data)
 
 # contactus page
 @app.route('/contactus')

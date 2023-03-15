@@ -1,8 +1,11 @@
-{% extends 'base.html' %}
+{% extends 'base.html' %}  {% block body %}
 
-{% block body %}
+<link rel="stylesheet" href="{{url_for('static',filename='css/home.css')}}" />
+
+
 
   <!-- slider -->
+  
   <div id="carouselExampleCaptions" class="carousel slide">
     <div class="carousel-indicators">
       <button type="button" data-bs-target="#carouselExampleCaptions" data-bs-slide-to="0" class="active"
@@ -46,52 +49,38 @@
   </div>
 
 
-  <!-- catalog -->
-  <div class="container pt-5">
-    <div class="row justify-content-evenly">
-      <div class="card" style="width: 15rem;">
-        <img src="http://source.unsplash.com/180x300/?programming" class="card-img-top" alt="..." style="height: 300px;">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
-      <div class="card" style="width: 15rem;">
-        <img src="http://source.unsplash.com/180x300/?programming" class="card-img-top" alt="..." style="height: 300px;">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
-      <div class="card" style="width: 15rem;">
-        <img src="http://source.unsplash.com/180x300/?programming" class="card-img-top" alt="..." style="height: 300px;">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
-      <div class="card" style="width: 15rem;">
-        <img src="http://source.unsplash.com/180x300/?programming" class="card-img-top" alt="..." style="height: 300px;">
-        <div class="card-body">
-          <h5 class="card-title">Card title</h5>
-          <p class="card-text">Some quick example text to build on the card title and make up the bulk of the card's content.</p>
-          <a href="#" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
-      {% for product in products %}
-      <div class="card" style="width: 15rem;">
-        <img src="{{ url_for('static', filename='uploads/' + product.imageAdd[0]) }}" class="card-img-top" alt="{{product.imageAdd}}" style="height: 300px;">
-        <div class="card-body">
-          <h5 class="card-title">{{product.name}}</h5>
-          <p class="card-text">{{product.description}}-----{{product.sizes_prices}}--------{{product.colors}}</p>
-          <a href="{{ url_for('order', id=product.id) }}" class="btn btn-primary">Go somewhere</a>
-        </div>
-      </div>
-      {% endfor %}
 
+  <!-- catalog -->
+  <div class="container pt-2">
+    <div class="row m-1">
+    
+      {% for category in category_data %}
+        {% if category.name in products|map(attribute='category') %}
+          <h4 class="mt-4">{{category.name}}</h4>
+          <hr class="mb-2">
+        {% endif %}
+        <div class="col-12 card-container">
+          {% for product in products %}
+            {% if category.name == product.category %}
+              <div class="card m-2" style="width: 15rem;">
+                <img src="{{ url_for('static', filename='uploads/' + product.imageAdd[0]) }}" class="card-img-top" alt="{{product.imageAdd}}" style="height: 300px;">
+                <div class="card-body card-text">
+                  <h5 class="card-title">{{product.name}}</h5>
+                  <span class="limited">Sizes:
+                  {% for s,p in product.sizes_prices %}
+                  {{s}},
+                  {% endfor %}
+                 </span>
+                  <p style="text-align: justify;" class="card-text">{{ product.description | truncate(79, True, '...') }}</p>
+                  <a href="{{ url_for('order', id=product.id) }}" class="btn btn-primary" style="width: 100%;">Buy Now</a>
+                </div>
+              </div>
+            {% endif %}
+          {% endfor %}
+        </div>
+      {% endfor %}
+          
+          
     </div>
   </div>
 
