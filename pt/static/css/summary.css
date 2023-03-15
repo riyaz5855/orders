@@ -1,0 +1,57 @@
+/* style for table */
+
+.styled-table {
+    border-collapse: collapse;
+    margin: 25px 0;
+    font-size: 0.9em;
+    font-family: sans-serif;
+    min-width: 100%;
+    box-shadow: 0 0 20px rgba(0, 0, 0, 0.15);
+}
+.styled-table thead tr {
+    background-color: #009879;
+    color: #ffffff;
+    text-align: left;
+}
+.styled-table th,
+.styled-table td {
+    padding: 12px 15px;
+}
+.styled-table tbody tr {
+    border-bottom: 1px solid #dddddd;
+}
+
+.styled-table tbody tr:nth-of-type(even) {
+    background-color: #f3f3f3;
+}
+
+.styled-table tbody tr:last-of-type {
+    border-bottom: 2px solid #009879;
+}
+.styled-table tbody tr.active-row {
+    font-weight: bold;
+    color: #009879;
+}
+tr > td:first-child {
+  font-weight: bold;
+}
+
+
+
+/* responsive for mobile devices */
+@media (max-width: 767px) {
+    .styled-table {
+      width: 100%; /* Set the table width to 100% of the parent element */
+      max-width: 100%; /* Set the maximum table width to 100% of the parent element */
+      padding: 5px; /* Reduce the padding of the table cells */
+      margin: 0; /* Remove any margin on the table */
+    }
+  
+    
+  .styled-table td, .styled-table th {
+      padding: 0px;
+      word-wrap: break-word;
+      overflow-wrap: break-word;
+      font-size:15px
+    }
+  }

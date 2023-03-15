@@ -1,65 +1,67 @@
 {% extends 'base.html' %} {% block body %}
 
-<link rel="stylesheet" href="{{url_for('static',filename='css/order.css')}}" />
+<link rel="stylesheet" href="{{url_for('static',filename='css/summary.css')}}" />
 
-<div id="rrr" class="row justify-content-center">
-  <div class="col-md-7">
-    <h2>{{name}}</h2>
-    <table class="styled-table">
-      <thead>
-        <tr>
-          <th class="h5">color - price</th>
-          {% for size, price in s %}
-          <th class="h5">{{ size }} - {{ price }}</th>
+<div class="container">
+  <div id="rrr" class="row justify-content-center">
+    <div class="col-md-9">
+      <h2>{{name}}</h2>
+      <table class="styled-table">
+        <thead>
+          <tr>
+            <th class="h5">color - price</th>
+            {% for size, price in s %}
+            <th class="h5">{{ size }} - {{ price }}</th>
+            {% endfor %}
+          </tr>
+        </thead>
+        <tbody>
+          {% for color, quantity in cq %}
+          <tr>
+            <td class="h5" style="background-color: {{color[2]}}">
+              {{color[0]}} - {{color[1]}}
+            </td>
+            {% for q in quantity %}
+            <td class="h4">{{q}}</td>
+            {% endfor %}
+          </tr>
           {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for color, quantity in cq %}
-        <tr>
-          <td class="h5" style="background-color: {{color[2]}}">
-            {{color[0]}} - {{color[1]}}
-          </td>
-          {% for q in quantity %}
-          <td class="h4">{{q}}</td>
-          {% endfor %}
-        </tr>
-        {% endfor %}
-      </tbody>
-    </table>
-
-    <div class="mt-5 table-responsive alert alert-primary">
-      <table class="table">
-        <tr>
-          <th>Size</th>
-          <th>Quantity</th>
-          <th>Price</th>
-          <th>Total Price</th>
-        </tr>
-        <tr style="
-            font-size: 20px;
-            font-weight: bold;
-            border-top: 2px solid black;
-          "></tr>
-        {% for size, info in size_dict.items() %}
-        <tr>
-          <td>{{ size }}</td>
-          <td>{{ info["quantity"] }}</td>
-          <td>{{ info["price"] }}</td>
-          <td>{{ info["quantity"] * info["price"] }}</td>
-        </tr>
-        {% endfor %}
-        <tr style="
-            font-size: 20px;
-            font-weight: bold;
-            border-top: 2px solid black;
-          ">
-          <td>Total</td>
-          <td></td>
-          <td></td>
-          <td>{{total_amount}}</td>
-        </tr>
+        </tbody>
       </table>
+
+      <div class="mt-5 table-responsive alert alert-primary">
+        <table class="table">
+          <tr>
+            <th>Size</th>
+            <th>Quantity</th>
+            <th>Price</th>
+            <th>Total Price</th>
+          </tr>
+          <tr style="
+              font-size: 20px;
+              font-weight: bold;
+              border-top: 2px solid black;
+            "></tr>
+          {% for size, info in size_dict.items() %}
+          <tr>
+            <td>{{ size }}</td>
+            <td>{{ info["quantity"] }}</td>
+            <td>{{ info["price"] }}</td>
+            <td>{{ info["quantity"] * info["price"] }}</td>
+          </tr>
+          {% endfor %}
+          <tr style="
+              font-size: 20px;
+              font-weight: bold;
+              border-top: 2px solid black;
+            ">
+            <td>Total</td>
+            <td></td>
+            <td></td>
+            <td>{{total_amount}}</td>
+          </tr>
+        </table>
+      </div>
     </div>
   </div>
 </div>

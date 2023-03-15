@@ -37,6 +37,49 @@ tr > td:first-child {
 }
 
 
+/* Make table container scrollable */
+.table-container {
+  max-height: 600px; /* or any other fixed height value */
+  overflow-x: auto;
+  overflow-y: auto;
+  -webkit-overflow-scrolling: touch;
+}
+
+/* Make table header sticky when scrolling vertically */
+.styled-table thead {
+  position: sticky;
+  top: 0;
+  z-index: 1;
+}
+
+/* Make first column sticky when scrolling horizontally */
+.styled-table th:first-child,
+.styled-table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 0;
+  background-color: #fff; /* Optional: Hide overlapping cells behind sticky column */
+}
+th.h5.text-center {
+  background-color: #009879; /* Set a background color */
+  color: #fff; /* Set a text color */
+  padding: 10px; /* Add some padding for readability */
+}
+/* Add z-index to "Colors" header to ensure it is displayed on top of the first column */
+.styled-table thead th:first-child {
+  z-index: 2;
+}
+/* Hide vertical scrollbar */
+::-webkit-scrollbar {
+  width: 0;
+}
+
+/* Hide horizontal scrollbar */
+::-webkit-scrollbar-horizontal {
+  display: none;
+}
+
+
 
 /* style for quantity button */
 
