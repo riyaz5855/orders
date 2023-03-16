@@ -1,0 +1,26 @@
+{% extends 'base.html' %} {% block body %}
+  {% if messages %}
+    <script>
+      alert("{{ messages[0] }}");
+    </script>
+  {% endif %}
+
+<div class="container">
+    <div class="row justify-content-center my-5">
+        <div class="col-md-4">
+            <form method="POST" action="{{ url_for('login') }}" autocomplete="off">
+                <div class="mb-3">
+                  <label for="exampleInputUserName" class="form-label">User Name</label>
+                  <input type="text" class="form-control" name="username" id="exampleInputUserName" aria-describedby="emailHelp">
+                </div>
+                <div class="mb-3">
+                  <label for="exampleInputPassword" class="form-label">Password</label>
+                  <input type="password" class="form-control" name="password" id="exampleInputPassword">
+                </div>
+                <button type="submit" class="btn btn-primary">Submit</button>
+              </form>
+        </div>
+    </div>
+</div>
+
+{% endblock body %}

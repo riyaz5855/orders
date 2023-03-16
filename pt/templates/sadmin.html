@@ -1,0 +1,46 @@
+{% extends 'base.html' %} {% block body %}
+
+
+<style>
+  .child-div {
+    height: 100px; /* set a fixed height here */
+  }
+  
+</style>
+
+<div class="container mt-5">
+  <div class="row justify-content-center">
+    <div class="col-9">
+      <div class="row g-2">
+        <div class="col-4">
+          <a href="{{ url_for('home') }}" class="py-auto child-div rounded-3 btn d-block alert alert-primary m-1 text-center"><h3>HOME</h3></a>
+        </div>
+        <div class="col-4">
+          <a href="{{ url_for('form') }}" class="py-auto child-div rounded-3 btn d-block alert alert-secondary m-1 text-center"><h3>ADD PRODUCT</h3></a>
+        </div>
+        <div class="col-4">
+          <a href="{{ url_for('colorsizeform') }}" class="py-auto child-div rounded-3 btn d-block alert alert-success m-1 text-center"><h3>ADD COLOR, SIZE, CATEGORY</h3></a>
+        </div>
+        <div class="col-4">
+          <a href="{{ url_for('dsb') }}" class="py-auto child-div rounded-3 btn d-block alert alert-danger m-1 text-center"><h3>PRODUCT LIST</h3></a>
+        </div>
+        <div class="col-4">
+          <a href="{{ url_for('admin') }}" class="py-auto child-div rounded-3 btn d-block alert alert-warning m-1 text-center"><h3>ADMIN PANEL</h3></a>
+        </div>
+        <div class="col-4">
+          <a href="# " class="py-auto child-div rounded-3 btn d-block alert alert-info m-1 text-center"><h3>ADD BANNER</h3></a>
+        </div>
+        <div class="col-4">
+          <div class="py-auto child-div rounded-3 alert alert-dark m-1 text-center"><h3>abc</h3></div>
+        </div>
+        <div class="col-4">
+          <div class="py-auto child-div rounded-3 alert alert-primary m-1  text-center"><h3>abc</h3></div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+  
+  
+
+{% endblock body %}

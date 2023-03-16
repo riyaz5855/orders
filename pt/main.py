@@ -1,4 +1,5 @@
-from flask import Flask, render_template, request, url_for, redirect
+from flask import Flask, render_template, request, url_for, redirect, abort, flash
+from flask_login import LoginManager, UserMixin, login_user, logout_user, login_required, current_user
 from flask_sqlalchemy import SQLAlchemy
 from flask_admin import Admin
 from flask_admin.contrib.sqla import ModelView
@@ -7,13 +8,24 @@ from datetime import datetime
 import random
 import ast
 
-
 # flask app and configs
 app = Flask(__name__)
 app.config['SQLALCHEMY_DATABASE_URI'] = 'sqlite:///database.db'
 app.config['SQLALCHEMY_TRACK_MODIFICATIONS'] = False
-app.secret_key = 'secret_key'
+app.secret_key = 'JzLkRtNqGpXyFbIhVuZe'
 db = SQLAlchemy(app)
+
+
+
+# define the user data model
+class User(UserMixin,db.Model):
+    id = db.Column(db.Integer, primary_key=True)
+    username = db.Column(db.String(20), unique=True, nullable=False)
+    email = db.Column(db.String(120), unique=True, nullable=False)
+    password = db.Column(db.String(60), nullable=False)
+    is_admin = db.Column(db.Boolean, default=False)
+    is_active = db.Column(db.Boolean, default=True)
+
 
 
 # define the form data model
@@ -53,13 +65,15 @@ class Product(db.Model):
     category = db.Column(db.String(50), nullable=False)
     sizes_prices = db.Column(db.String(200), nullable=False)
     colors = db.Column(db.String(1500), nullable=False)
-    description = db.Column(db.String(1500), nullable=False)
+    description = db.Column(db.String(150), nullable=False)
     imageAdd = db.Column(db.String(600), nullable=False)
 
 
-# create the database
-with app.app_context():
-    db.create_all()
+
+
+# # create the database
+# with app.app_context():
+#     db.create_all()
 
 
 # admin panel
@@ -69,6 +83,61 @@ admin.add_view(ModelView(Size, db.session))
 admin.add_view(ModelView(Product, db.session))
 admin.add_view(ModelView(Smry, db.session))
 admin.add_view(ModelView(Category, db.session))
+admin.add_view(ModelView(User, db.session))
+
+# # Manipulate the table
+# @app.route('/delete-user-table')
+# def delete_user_table():
+#     query = text('DROP TABLE IF EXISTS user;')
+#     db.session.execute(query)
+#     db.session.commit()
+#     return 'User table deleted'
+
+# Set up Flask-Login
+login_manager = LoginManager()
+login_manager.init_app(app)
+
+# Set up the user loader function
+@login_manager.user_loader
+def load_user(user_id):
+    return User.query.get(int(user_id))
+
+
+# Set up a login view
+@app.route('/login', methods=['GET', 'POST'])
+def login():
+    if current_user.is_authenticated and current_user.is_admin:  # Check if user is already authenticated
+        return redirect(url_for('sadmin'))
+    if request.method == "POST":
+        username = request.form["username"]
+        password = request.form["password"]
+        try:
+            user = User.query.filter_by(username=username).first()
+            if user:
+                if user.password == password:
+                    login_user(user)
+                    return redirect(url_for('sadmin'))
+        except ValueError as e:
+            flash(str(e))
+            return render_template('login.html')
+    return render_template('login.html')
+
+
+
+@login_required
+@app.route('/logout')
+def logout():
+    logout_user()
+    return redirect(url_for('home'))
+
+
+# admin login
+@app.route('/sadmin')
+@login_required
+def sadmin():
+    if not current_user.is_admin:
+        abort(403)
+    return render_template('sadmin.html')
 
 
 # home page
@@ -82,6 +151,7 @@ def home():
     category_data = Category.query.all()
     return render_template('home.html',products=products_stl,category_data=category_data)
 
+
 # contactus page
 @app.route('/contactus')
 def contactus():
@@ -89,8 +159,9 @@ def contactus():
 
 
 
-# product form
+# add product form
 @app.route('/form', methods=['POST','GET'])
+@login_required
 def form():
     if request.method == 'POST':
         name = request.form['name']
@@ -137,6 +208,7 @@ def form():
 
 # color size form
 @app.route('/colorsizeform', methods=['POST','GET'])
+@login_required
 def colorsizeform():
     if request.method == 'POST':
         if "color" in request.form.keys():
@@ -254,6 +326,7 @@ def receipt(odrname):
 
 # dsb page
 @app.route('/dsb')
+@login_required
 def dsb():
     products = Product.query.all()
     products_stl=[]
@@ -265,6 +338,7 @@ def dsb():
 
 # update page
 @app.route('/update/<int:id>', methods=['POST','GET'])
+@login_required
 def update(id):
     product = Product.query.get_or_404(id)
     if request.method == 'POST':
@@ -341,6 +415,7 @@ def update(id):
 
 # delete page
 @app.route('/delete/<int:id>', methods=['POST','GET'])
+@login_required
 def delete(id):
     product = Product.query.get_or_404(id)
     # delete existing image
@@ -366,6 +441,20 @@ def stl(product):
     imageAdd = ast.literal_eval(product.imageAdd)
     l={'id':id,'name':name, 'category':category, 'sizes_prices':sizes_prices,'colors':colors,'description':description,'imageAdd':imageAdd}
     return l
+
+
+
+# Define a Flask view for the '/admin' endpoint
+@app.route('/admin')
+@login_required
+def admin():
+    if current_user.is_authenticated and current_user.is_admin:
+        # Render the default Flask-Admin index template
+        return redirect('/admin/')
+    else:
+        # Redirect non-admin users to the login page
+        return redirect(url_for('login'))
+
 
 
 
