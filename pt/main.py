@@ -136,7 +136,7 @@ def logout():
 @login_required
 def sadmin():
     if not current_user.is_admin:
-        abort(403)
+        return redirect(url_for('login'))
     return render_template('sadmin.html')
 
 
@@ -460,4 +460,4 @@ def admin():
 
 if __name__ == '__main__':
     # db.create_all()
-    app.run(debug=True)
+    app.run(debug=True,host="0.0.0.0")
