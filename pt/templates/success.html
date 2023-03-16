@@ -12,8 +12,9 @@
 </div>
 
 <script>
-    var text = "{{url}}";
-    var phone = "+917021144872";
+  var phone = "+917021144872";
+  var s = "Hi Sir/Ma'am, Just wanted to let you know that I've placed an order on our site. You can check it out here:  "
+  var text = s + "{{url}}";
 
     // Build WhatsApp message URL with text and phone number
     var wurl = "https://wa.me/" + phone + "/?text=" + encodeURIComponent(text);
