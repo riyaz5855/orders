@@ -60,6 +60,27 @@ tr > td:first-child {
   z-index: 0;
   background-color: #fff; /* Optional: Hide overlapping cells behind sticky column */
 }
+
+
+/* Media query for screens smaller than 768px (typical mobile device) */
+@media only screen and (max-width: 767px) {
+.styled-table td:first-child {
+  position: sticky;
+  left: 0;
+  z-index: 0;
+  padding-left: 0px;
+  padding-right: 0px;
+  background-color: #fff; /* Optional: Hide overlapping cells behind sticky column */
+  display: inline-block;
+  width:70px;
+  font-size: smaller;
+  height: 60px;
+  margin-bottom: 0;
+  }
+}
+
+
+
 th.h5.text-center {
   background-color: #009879; /* Set a background color */
   color: #fff; /* Set a text color */

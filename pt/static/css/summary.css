@@ -48,10 +48,32 @@ tr > td:first-child {
     }
   
     
-  .styled-table td, .styled-table th {
-      padding: 0px;
-      word-wrap: break-word;
-      overflow-wrap: break-word;
-      font-size:15px
+    .styled-table td, .styled-table th {
+        text-align: center;
+        padding: 0px;
+        word-wrap: break-word;
+        overflow-wrap: break-word;
     }
+    .styled-table th{
+        font-size:12px
+    }
+    
   }
+
+  
+/* Media query for screens smaller than 768px (typical mobile device) */
+@media only screen and (max-width: 767px) {
+    .styled-table th:first-child,
+    .styled-table td:first-child {
+      position: sticky;
+      left: 0;
+      z-index: 0;
+      padding-left: 0px;
+      padding-right: 0px;
+      display: inline-block;
+      width:60px;
+      font-size: smaller;
+      height: 30px;
+      margin-bottom: 0;
+      }
+    }

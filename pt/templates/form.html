@@ -6,7 +6,7 @@
 
 <div class="container">
   <div class="row justify-content-center">
-    <div class="col-md-7">
+    <div class="col-md-7 px-4">
       <h1 class="mt-2">Product Form</h1>
 
       <form enctype="multipart/form-data" method="POST" action="{{ url_for('form') }}">
@@ -57,7 +57,7 @@
                 <input class="form-check-input" value="{{color.name}}-{{color.number}}-{{color.color}}" type="checkbox"
                   name="color" id="color-{{color.name}}" />
                 <label class="form-check-label" for="color-{{color.name}}"><span class="color-swatch rounded"
-                    style="background-color: {{color.color}}; width:12rem; height:2rem"></span>
+                    style="background-color: {{color.color}}; width:10rem; height:2rem"></span>
                   {{color.name}}</label>
               </div>
               {% endfor %}
