@@ -158,3 +158,14 @@ input[type=number]::-webkit-outer-spin-button {
     margin: 0;
 }
 
+
+/* on landscape remove nav and reduce table height */
+@media only screen and (max-width: 768px) and (orientation: landscape) {
+  .table-container {
+    height: 80vh; /* set the height to 50% of the viewport height */
+  }
+  .navbar {
+    display: none; /* hide the navbar */
+  }
+}
+
