@@ -376,7 +376,7 @@ def update(id):
             imageAdds = []
             for file in files:
                 # generate a unique filename using timestamp and random string
-                unique_filename = str(datetime.utcnow().timestamp()) + '_' + str(random.randint(1, 1000)) + '_' + file.filename
+                unique_filename = str(datetime.utcnow().timestamp()) + '_' + str(random.randint(1, 1000))
                 file_path = os.path.join('static/uploads', unique_filename)
                 file.save(file_path)
                 imageAdds.append(unique_filename)
