@@ -27,7 +27,6 @@ class User(UserMixin,db.Model):
     is_active = db.Column(db.Boolean, default=True)
 
 
-
 # define the form data model
 class Color(db.Model):
     __tablename__ = "color"
@@ -67,8 +66,6 @@ class Product(db.Model):
     colors = db.Column(db.String(1500), nullable=False)
     description = db.Column(db.String(150), nullable=False)
     imageAdd = db.Column(db.String(600), nullable=False)
-
-
 
 
 # # create the database
@@ -460,4 +457,4 @@ def admin():
 
 if __name__ == '__main__':
     # db.create_all()
-    app.run(debug=False,host="0.0.0.0")
+    app.run(debug=True,host="0.0.0.0")

@@ -55,7 +55,7 @@
                     <button type='button' id="decrement-{{color[1]}}-{{size[0]}}">-</button>
                     <input class="quant" type="number"
                       id="integer-field-{{color[1]}}-{{size[0]}}" style="-webkit-appearance: none; -moz-appearance: textfield"
-                      value="0" name="data" />
+                      value="0" name="data"  min="0" onchange="if (this.value === '') this.value = '0';" />
                     <button type="button" id="increment-{{color[1]}}-{{size[0]}}">+</button>
                     <input type="hidden" value="{{color[0]}}-{{color[1]}}-{{color[2]}}-{{size[0]}}-{{size[1]}}" name="ddata" />
                     <input type="hidden" value="{{product.category}}" name="category" />
